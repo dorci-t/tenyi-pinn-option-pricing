@@ -1,0 +1,87 @@
+"""
+PINN loss components for the Black-Scholes benchmark.
+
+The total loss combines three terms: the Black-Scholes PDE residual on
+interior points, the terminal payoff condition at maturity, and the boundary
+conditions at the edges of the stock price domain.
+"""
+
+import torch
+
+from src.pde import black_scholes_residual
+from src.sampling import (
+    sample_boundary_points,
+    sample_interior_points,
+    sample_terminal_points,
+)
+
+
+def compute_pinn_loss(
+    model,
+    K=40.0,
+    r=0.05,
+    sigma=0.2,
+    T=1.0,
+    S_max=160.0,
+    n_interior=1000,
+    n_terminal=300,
+    n_boundary=300,
+    beta=1.0,
+    device="cpu",
+):
+    """
+    Compute one PINN loss value using freshly sampled points.
+    """
+    t_int, S_int = sample_interior_points(
+        n_interior,
+        T=T,
+        S_max=S_max,
+        device=device,
+    )
+
+    residual = black_scholes_residual(
+        model,
+        t_int,
+        S_int,
+        r=r,
+        sigma=sigma,
+    )
+
+    loss_pde = torch.mean(residual**2)
+
+    t_T, S_T, payoff = sample_terminal_points(
+        n_terminal,
+        K=K,
+        T=T,
+        S_max=S_max,
+        device=device,
+    )
+
+    V_T_pred = model(t_T, S_T)
+    loss_terminal = torch.mean((V_T_pred - payoff) ** 2)
+
+    t_b, S_left, V_left, S_right, V_right = sample_boundary_points(
+        n_boundary,
+        K=K,
+        r=r,
+        T=T,
+        S_max=S_max,
+        device=device,
+    )
+
+    V_left_pred = model(t_b, S_left)
+    V_right_pred = model(t_b, S_right)
+
+    loss_boundary = torch.mean((V_left_pred - V_left) ** 2)
+    loss_boundary += torch.mean((V_right_pred - V_right) ** 2)
+
+    total_loss = loss_terminal + loss_boundary + beta * loss_pde
+
+    components = {
+        "total": total_loss.item(),
+        "pde": loss_pde.item(),
+        "terminal": loss_terminal.item(),
+        "boundary": loss_boundary.item(),
+    }
+
+    return total_loss, components

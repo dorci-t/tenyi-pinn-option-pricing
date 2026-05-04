@@ -2,17 +2,11 @@
 
 ## Rövid projektleírás
 
-## TODO: ez most szerintem picit zavaros, át kell még írni
-
 Alapötlet: https://arxiv.org/abs/2312.06711
 
-A projekt célja a Black-Scholes parciális differenciálegyenlet numerikus közelítése Physics-Informed Neural Network (PINN) segítségével.
+A projektben azt vizsgáljuk, hogyan lehet a Black-Scholes opcióárazási problémát Physics-Informed Neural Network (PINN) segítségével megközelíteni.
 
-A teljes cikk reprodukciója helyett a projekt egy részfeladatra fókuszál:
-
-> Európai call opció árának közelítése PINN-nel, majd összehasonlítás az analitikus Black-Scholes képlettel.
-
-Ez azért jó kiindulópont, mert európai call opcióra ismert zárt alakú megoldás van, ezért pontos benchmarkkal tudjuk ellenőrizni a neurális háló eredményét.
+Nem a teljes cikk reprodukciója a cél, hanem annak egy kisebb, jól körülhatárolható részét szeretnénk megvalósítani. Első körben egy kontrollált európai call opciós példán dolgozunk. Ebben az esetben ismert az analitikus Black-Scholes megoldás, ezért pontosan látjuk, hogy a PINN által tanult árfüggvény mennyire közelíti a várt eredményt. Ez jó kiindulópont a PINN implementáció felépítéséhez és teszteléséhez.
 
 A projekt alapját egy szintetikus példa adja, nem piaci adathalmaz. A PINN tanításához a Black-Scholes PDE értelmezési tartományából választunk pontokat, az eredményeket pedig az analitikus Black-Scholes képlettel hasonlítjuk össze. Ha marad idő, megnézünk valódi piaci opciós adatokat is.
 
@@ -94,11 +88,10 @@ Telepítés:
 python -m venv .venv
 ```
 
-Windows alatt:
+Windows PowerShell alatt:
 
-```bash
-.venv\Scripts\activate
-```
+```powershell
+.venv\Scripts\Activate.ps1
 
 macOS/Linux alatt:
 
@@ -126,7 +119,7 @@ A projekt alapötlete a következő cikkből származik:
 
 Dhiman, A. and Hu, Y. (2023) Physics informed Neural Network for option pricing, arXiv.org. Available at: https://arxiv.org/abs/2312.06711 (Accessed: 03 May 2026). 
 
-## Tervezett programcsomagok
+## Használt / tervezett programcsomagok és eszközök
 ## TODO: véglegesítés (majd a projekt végén)
 
 - Python
@@ -134,4 +127,4 @@ Dhiman, A. and Hu, Y. (2023) Physics informed Neural Network for option pricing,
 - SciPy
 - Matplotlib
 - PyTorch
-- Jupyter Notebook (nem programcsomag, de ugyanúgy installálni kell)
+- Jupyter Notebook

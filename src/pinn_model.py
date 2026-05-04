@@ -20,12 +20,16 @@ class PINN(nn.Module):
         V(t, S)
     """
 
-    def __init__(self, hidden_dim=64, hidden_layers=4):
+    def __init__(self, hidden_dim=64, hidden_layers=4, T=1.0, S_max=160.0):
         super().__init__()
 
-        layers = []
-        layers.append(nn.Linear(2, hidden_dim))
-        layers.append(nn.Tanh())
+        self.T = T
+        self.S_max = S_max
+
+        layers = [
+            nn.Linear(2, hidden_dim),
+            nn.Tanh(),
+        ]
 
         for _ in range(hidden_layers - 1):
             layers.append(nn.Linear(hidden_dim, hidden_dim))
@@ -36,5 +40,8 @@ class PINN(nn.Module):
         self.net = nn.Sequential(*layers)
 
     def forward(self, t, S):
-        x = torch.cat([t, S], dim=1)
+        t_scaled = t / self.T
+        S_scaled = S / self.S_max
+
+        x = torch.cat([t_scaled, S_scaled], dim=1)
         return self.net(x)

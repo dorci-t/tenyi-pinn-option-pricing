@@ -16,9 +16,19 @@
 
 ## Dorci - 2026-05-03
 
-- [ ] README
-- [ ] első commit
-- [ ] GitHub link elküldése a tanárnak
+- [x] README
+- [x] első commit
+- [x] GitHub link elküldése a tanárnak
+
+## 2026-05-04 — mai terv
+
+- [x] README rendbetétele
+- [ ] `src/__init__.py` hozzáadása
+- [ ] PINN bemenetek skálázásának átgondolása
+- [ ] szintetikus pontmintavételezés megírása
+- [ ] PINN loss komponenseinek előkészítése
+- [ ] egyszeri loss-számítás kipróbálása egy még nem tanított modellen
+- [ ] második commit és push
 
 ## TODO
 
@@ -26,8 +36,6 @@
 
 - [ ] átnézni még egyszer a Black-Scholes képlet implementációját
 - [ ] pontosítani, milyen `(t, S)` tartományon dolgozunk
-- [ ] létrehozni a tanításhoz használt szintetikus pontokat
-- [ ] külön kezelni a belső pontokat, a lejárati pontokat és a perempontokat
 - [ ] létrehozni egy tesztrácsot a kiértékeléshez
 - [ ] kiszámolni az analitikus Black-Scholes értékeket ezen a rácson
 - [ ] megírni az MSE/MAE kiértékelést
@@ -64,7 +72,7 @@
 - [ ] bid/ask alapján kiszámolni egy egyszerű mid price-t
 - [ ] összevetni a piaci árakat a Black-Scholes/PINN árakkal
 
-### Dokumentáció / leadás
+### Dokumentáció / prezentáció
 
 - [ ] README frissítése, ha elkészül a PINN rész
 - [ ] futtatási lépések ellenőrzése friss környezetben
