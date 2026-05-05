@@ -30,6 +30,12 @@
 - [x] egyszeri loss-számítás kipróbálása egy még nem tanított modellen
 - [x] második commit és push
 
+## Dorci - 2026-05-05
+
+- [x] első egyszerű PINN training script megírása
+- [x] rövid training futtatása
+- [x] loss curve generálása
+
 ## TODO
 
 ### Black-Scholes benchmark

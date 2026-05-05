@@ -72,28 +72,32 @@ A PINN eredményét az analitikus Black-Scholes árral hasonlítjuk majd össze.
 
 ## Jelenlegi státusz
 
-- [x] projekt scope meghatározva
-- [x] GitHub-repo struktúra előkészítve
-- [x] analitikus Black-Scholes képlet implementálva
-- [x] első ábrák generálása megvan
-- [ ] PINN-modell betanítása
-- [ ] PINN vs analitikus benchmark összehasonlítás
-- [ ] felkészülés a prezentációra
+- [x] projekt scope és fókusz meghatározva
+- [x] analitikus Black-Scholes benchmark implementálva
+- [x] benchmark-ábrák generálása megvan
+- [x] PINN alapkomponensek előkészítve
+- [x] első PINN training loop elkészült
+- [x] rövid próba-training és loss curve generálva
+- [ ] PINN-predikció kiértékelése az analitikus benchmarkhoz képest
+- [ ] hibák vizualizálása és eredmények értelmezése
+- [ ] ha van idő: valós piaci adatos kiegészítés
+- [ ] végső dokumentáció és prezentáció elkészítése
 
 ## Futtatás
 
-Telepítés:
+Virtuális környezet létrehozása:
 
 ```bash
 python -m venv .venv
 ```
 
-Windows PowerShell alatt:
+Aktiválás Windows PowerShell alatt:
 
 ```powershell
 .venv\Scripts\Activate.ps1
+```
 
-macOS/Linux alatt:
+Aktiválás macOS/Linux alatt:
 
 ```bash
 source .venv/bin/activate
@@ -105,13 +109,31 @@ Csomagok telepítése:
 pip install -r requirements.txt
 ```
 
-Első analitikus benchmark futtatása:
+Analitikus Black-Scholes benchmark futtatása:
 
 ```bash
 python main.py
 ```
 
+PINN komponensek gyors ellenőrzése:
+
+```bash
+python check_pinn_components.py
+```
+
 A generált ábrák a `figures/` mappába kerülnek.
+
+PINN első rövid tanításának futtatása:
+
+```bash
+python train_pinn.py
+```
+
+Ez elmenti a tanítási veszteséggörbét:
+
+```text
+figures/pinn_training_loss.png
+```
 
 ## Forrás
 
@@ -128,3 +150,4 @@ Dhiman, A. and Hu, Y. (2023) Physics informed Neural Network for option pricing,
 - Matplotlib
 - PyTorch
 - Jupyter Notebook
+- Git
