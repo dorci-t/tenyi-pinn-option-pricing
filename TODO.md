@@ -36,38 +36,30 @@
 - [x] rövid training futtatása
 - [x] loss curve generálása
 
+## Dorci - 2026-05-06
+- [x] PINN evaluation script megírása
+- [x] MSE és MAE kiszámítása az analitikus benchmarkhoz képest
+- [x] PINN vs analitikus metszetábra generálása
+- [x] PINN hibaábra generálása
+
 ## TODO
 
-### Black-Scholes benchmark
+### Kiértékelés / eredmények
 
-- [ ] átnézni még egyszer a Black-Scholes képlet implementációját
-- [ ] pontosítani, milyen `(t, S)` tartományon dolgozunk
-- [ ] létrehozni egy tesztrácsot a kiértékeléshez
-- [ ] kiszámolni az analitikus Black-Scholes értékeket ezen a rácson
-- [ ] megírni az MSE/MAE kiértékelést
+- [ ] első evaluation eredmények rövid értelmezése
+- [ ] hibák vizsgálata különböző tartományokban
+- [ ] finomított modell kiértékelése MSE/MAE metrikákkal
+- [ ] végleges metszet- és hibaábrák generálása
+- [ ] eredmények összefoglalása a beszámolóhoz
 
-### PINN rész
+### Modell javítása
 
-- [ ] véglegesíteni az egyszerű PyTorch modellt
-- [ ] kipróbálni, hogy a `forward(t, S)` tényleg a megfelelő alakú outputot adja
-- [ ] megírni a PDE residual számítását autograddal
-- [ ] megírni a loss külön részeit:
-  - [ ] payoff feltétel
-  - [ ] peremfeltételek
-  - [ ] PDE residual
-- [ ] összerakni a teljes loss-függvényt
-
-### Training és eredmények
-
-- [ ] megírni az első training loopot
-- [ ] eltárolni a loss értékeket tanítás közben
-- [ ] kirajzolni a loss görbét
-- [ ] futtatni egy rövid próba-traininget, hogy látszódjon, működik-e
-- [ ] ha stabil, futtatni egy hosszabb tanítást
-- [ ] kiszámolni a PINN predikcióját a tesztrácson
-- [ ] összehasonlítani az analitikus megoldással
-- [ ] hibákat ábrázolni metszeteken és/vagy felületen
-- [ ] eredmények rövid értelmezése
+- [ ] training hosszának és learning rate-nek finomítása
+- [ ] néhány egyszerű hiperparaméter-kísérlet futtatása
+- [ ] hidden layer méret és PDE loss súlyának kipróbálása
+- [ ] loss komponensek skálázásának / súlyozásának átgondolása
+- [ ] stabilabb training futtatása a kiválasztott beállításokkal
+- [ ] végső eredmények újragenerálása
 
 ### Ha marad idő
 

@@ -78,7 +78,7 @@ A PINN eredményét az analitikus Black-Scholes árral hasonlítjuk majd össze.
 - [x] PINN alapkomponensek előkészítve
 - [x] első PINN training loop elkészült
 - [x] rövid próba-training és loss curve generálva
-- [ ] PINN-predikció kiértékelése az analitikus benchmarkhoz képest
+- [x] PINN-predikció kiértékelése az analitikus benchmarkhoz képest
 - [ ] hibák vizualizálása és eredmények értelmezése
 - [ ] ha van idő: valós piaci adatos kiegészítés
 - [ ] végső dokumentáció és prezentáció elkészítése
@@ -134,6 +134,15 @@ Ez elmenti a tanítási veszteséggörbét:
 ```text
 figures/pinn_training_loss.png
 ```
+
+PINN kiértékelése az analitikus benchmarkhoz képest:
+
+    python evaluate_pinn.py
+
+Ez elmenti az összehasonlító és hibaábrákat:
+
+    figures/pinn_vs_analytic_slices.png
+    figures/pinn_error_surface.png
 
 ## Forrás
 
