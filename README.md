@@ -158,5 +158,6 @@ Dhiman, A. and Hu, Y. (2023) Physics informed Neural Network for option pricing,
 - SciPy
 - Matplotlib
 - PyTorch
+- tqdm
 - Jupyter Notebook
-- Git
+- Git/GitHub
