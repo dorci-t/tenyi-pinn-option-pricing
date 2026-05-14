@@ -1,11 +1,11 @@
 """
-Evaluate the trained PINN against the analytic Black-Scholes benchmark.
+Evaluate a trained PINN against the analytic Black-Scholes benchmark.
 
-This script loads the saved PINN weights, predicts option prices on a regular
-(t, S) grid, compares them to the analytic Black-Scholes prices, and saves
-basic error plots.
+Loads saved weights, predicts option prices on a regular (t, S) grid, compares
+them to the analytic Black-Scholes prices, and saves error plots.
 """
 
+import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -13,7 +13,12 @@ import numpy as np
 import torch
 
 from src.black_scholes import european_call_price
-from src.pinn_model import PINN
+from src.pinn_model import PINN, GatedPINN
+
+MODELS = {
+    "pinn": PINN,
+    "gated": GatedPINN,
+}
 
 
 def mean_squared_error(y_pred, y_true):
@@ -24,7 +29,7 @@ def mean_absolute_error(y_pred, y_true):
     return np.mean(np.abs(y_pred - y_true))
 
 
-def plot_error_surface(SS, TT, error, output_path):
+def plot_error_surface(SS, TT, error, title, output_path):
     fig = plt.figure(figsize=(9, 6))
     ax = fig.add_subplot(111, projection="3d")
 
@@ -33,14 +38,14 @@ def plot_error_surface(SS, TT, error, output_path):
     ax.set_xlabel("Stock price S")
     ax.set_ylabel("Time t")
     ax.set_zlabel("Prediction error")
-    ax.set_title("PINN prediction error")
+    ax.set_title(title)
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
     plt.close()
 
 
-def plot_price_slices(S_values, true_slices, pred_slices, output_path):
+def plot_price_slices(S_values, true_slices, pred_slices, model_name, output_path):
     plt.figure(figsize=(8, 5))
 
     for label in true_slices:
@@ -49,12 +54,12 @@ def plot_price_slices(S_values, true_slices, pred_slices, output_path):
             S_values,
             pred_slices[label],
             linestyle="--",
-            label=f"{label} PINN",
+            label=f"{label} {model_name}",
         )
 
     plt.xlabel("Stock price S")
     plt.ylabel("Option price V(t, S)")
-    plt.title("Analytic Black-Scholes vs PINN prediction")
+    plt.title(f"Analytic Black-Scholes vs {model_name} prediction")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -63,13 +68,25 @@ def plot_price_slices(S_values, true_slices, pred_slices, output_path):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model",
+        choices=MODELS.keys(),
+        default="gated",
+    )
+    args = parser.parse_args()
+
     output_dir = Path("figures")
     output_dir.mkdir(exist_ok=True)
 
-    model_path = Path("pinn_model.pt")
+    prefix = "gated_pinn" if args.model == "gated" else "pinn"
+    model_cls = MODELS[args.model]
+    model_name = model_cls.__name__
+
+    model_path = Path(f"{prefix}_model.pt")
     if not model_path.exists():
         raise FileNotFoundError(
-            "Could not find pinn_model.pt. Run `python train_pinn.py` first."
+            f"Could not find {model_path}. Run `python train_pinn.py --model {args.model}` first."
         )
 
     K = 40.0
@@ -78,7 +95,7 @@ def main():
     T = 1.0
     S_max = 160.0
 
-    model = PINN(hidden_dim=32, hidden_layers=2, T=T, S_max=S_max)
+    model = model_cls(hidden_dim=32, hidden_layers=2, T=T, S_max=S_max)
     model.load_state_dict(torch.load(model_path, map_location="cpu"))
     model.eval()
 
@@ -99,15 +116,19 @@ def main():
     mse = mean_squared_error(V_pred, V_true)
     mae = mean_absolute_error(V_pred, V_true)
 
-    print("PINN vs analytic Black-Scholes benchmark:")
+    print(f"{model_name} vs analytic Black-Scholes benchmark:")
     print(f"MSE: {mse:.6f}")
     print(f"MAE: {mae:.6f}")
+
+    error_plot = output_dir / f"{prefix}_error_surface.png"
+    slices_plot = output_dir / f"{prefix}_vs_analytic_slices.png"
 
     plot_error_surface(
         SS,
         TT,
         error,
-        output_dir / "pinn_error_surface.png",
+        f"{model_name} prediction error",
+        error_plot,
     )
 
     slice_times = [0.0, 0.5, 1.0]
@@ -134,12 +155,13 @@ def main():
         S_grid,
         true_slices,
         pred_slices,
-        output_dir / "pinn_vs_analytic_slices.png",
+        model_name,
+        slices_plot,
     )
 
     print("Saved:")
-    print("- figures/pinn_error_surface.png")
-    print("- figures/pinn_vs_analytic_slices.png")
+    print(f"- {error_plot}")
+    print(f"- {slices_plot}")
 
 
 if __name__ == "__main__":

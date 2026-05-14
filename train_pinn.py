@@ -1,11 +1,11 @@
 """
-First training script for the Black-Scholes PINN.
+Training script for the Black-Scholes PINN.
 
-This is intentionally kept simple: it trains the current PINN model for a
-small number of epochs and saves the loss curve. The goal is to check that
-the model can actually be optimised before adding more experiments.
+Trains the selected model architecture for a small number of epochs and saves
+the loss curve.
 """
 
+import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -13,15 +13,20 @@ import torch
 from tqdm import trange
 
 from src.losses import compute_pinn_loss
-from src.pinn_model import PINN
+from src.pinn_model import PINN, GatedPINN
+
+MODELS = {
+    "pinn": PINN,
+    "gated": GatedPINN,
+}
 
 
-def plot_loss_curve(loss_history, output_path):
+def plot_loss_curve(loss_history, title, output_path):
     plt.figure(figsize=(8, 5))
     plt.plot(loss_history)
     plt.xlabel("Epoch")
     plt.ylabel("Total loss")
-    plt.title("PINN training loss")
+    plt.title(title)
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
@@ -29,6 +34,14 @@ def plot_loss_curve(loss_history, output_path):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model",
+        choices=MODELS.keys(),
+        default="gated",
+    )
+    args = parser.parse_args()
+
     torch.manual_seed(0)
 
     output_dir = Path("figures")
@@ -36,7 +49,8 @@ def main():
 
     device = "cpu"
 
-    model = PINN(
+    model_cls = MODELS[args.model]
+    model = model_cls(
         hidden_dim=32,
         hidden_layers=2,
         T=1.0,
@@ -74,17 +88,20 @@ def main():
                 f"boundary={components['boundary']:.4f}"
             )
 
-    plot_loss_curve(
-        loss_history,
-        output_dir / "pinn_training_loss.png",
-    )
+    prefix = args.model if args.model != "pinn" else "pinn"
+    if args.model == "gated":
+        prefix = "gated_pinn"
 
-    torch.save(model.state_dict(), "pinn_model.pt")
+    loss_plot = output_dir / f"{prefix}_training_loss.png"
+    model_file = f"{prefix}_model.pt"
+
+    plot_loss_curve(loss_history, f"{model_cls.__name__} training loss", loss_plot)
+    torch.save(model.state_dict(), model_file)
 
     print("Training finished.")
     print("Saved:")
-    print("- figures/pinn_training_loss.png")
-    print("- pinn_model.pt")
+    print(f"- {loss_plot}")
+    print(f"- {model_file}")
 
 
 if __name__ == "__main__":

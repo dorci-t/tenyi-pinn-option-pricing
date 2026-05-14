@@ -72,8 +72,9 @@ def compute_pinn_loss(
     V_left_pred = model(t_b, S_left)
     V_right_pred = model(t_b, S_right)
 
-    loss_boundary = torch.mean((V_left_pred - V_left) ** 2)
-    loss_boundary += torch.mean((V_right_pred - V_right) ** 2)
+    loss_boundary = (V_left_pred - V_left) ** 2
+    loss_boundary += (V_right_pred - V_right) ** 2
+    loss_boundary = torch.mean(loss_boundary) / 2
 
     total_loss = loss_terminal + loss_boundary + beta * loss_pde
 
