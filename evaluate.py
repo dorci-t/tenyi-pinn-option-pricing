@@ -83,7 +83,7 @@ if not config.get("analytic_only", False):
     model_cls = MODELS[config["model"]]
     model_name = model_cls.__name__
 
-    model_path = Path(f"{prefix}_model.pt")
+    model_path = Path("checkpoints") / f"{prefix}_model.pt"
     if not model_path.exists():
         raise FileNotFoundError(
             f"Could not find {model_path}. Train the model first with run_training.py."

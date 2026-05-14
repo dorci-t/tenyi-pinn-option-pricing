@@ -65,8 +65,11 @@ loss_history = train_model(
 # %%
 prefix = "gated_pinn" if config["model"] == "gated" else "pinn"
 
+checkpoint_dir = Path("checkpoints")
+checkpoint_dir.mkdir(exist_ok=True)
+
 loss_plot = output_dir / f"{prefix}_training_loss.png"
-model_file = f"{prefix}_model.pt"
+model_file = checkpoint_dir / f"{prefix}_model.pt"
 
 plot_lines(
     range(len(loss_history)),
