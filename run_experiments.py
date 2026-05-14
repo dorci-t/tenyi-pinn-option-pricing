@@ -28,6 +28,7 @@ from src.plotting import plot_lines
 from src.train import evaluate_vs_analytic, train_model
 
 CONFIG_PATH = os.environ.get("CONFIG", "configs/gated.toml")
+# CONFIG_PATH = os.environ.get("CONFIG", "configs/pinn.toml")
 config = load_config(CONFIG_PATH)
 
 DEFAULTS = {

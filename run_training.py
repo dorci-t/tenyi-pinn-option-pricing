@@ -24,6 +24,7 @@ from src.plotting import plot_lines
 from src.train import train_model
 
 CONFIG_PATH = os.environ.get("CONFIG", "configs/gated.toml")
+# CONFIG_PATH = os.environ.get("CONFIG", "configs/pinn.toml")
 config = load_config(CONFIG_PATH)
 
 # %% [markdown]

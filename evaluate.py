@@ -28,6 +28,8 @@ from src.plotting import plot_comparison_slices, plot_lines, plot_surface
 from src.train import evaluate_vs_analytic
 
 CONFIG_PATH = os.environ.get("CONFIG", "configs/gated.toml")
+# CONFIG_PATH = os.environ.get("CONFIG", "configs/pinn.toml")
+# CONFIG_PATH = os.environ.get("CONFIG", "configs/analytic.toml")
 config = load_config(CONFIG_PATH)
 
 # %%
